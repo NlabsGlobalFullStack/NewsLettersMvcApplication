@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Login";
+    var errors = TempData["Error"];
+    var userNameOrEmail = TempData["UserNameOrEmail"];
+    var password = TempData["Password"];
+}
+<div class="row">
+    <div class="d-flex justify-content-center align-items-center" style="height: 78vh;">
+        <div class="col-xl-4 col-lg-5 col-md-8 col-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Sign In</h3>
+                    <p>Please fill your information to login</p>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Auth" asp-action="Login" method="post" autocomplete="off">
+                        <div class="form-group">
+                            <label>UserName or Email</label>
+                            <input type="text" name="UserNameOrEmail" class="form-control" value="@userNameOrEmail" required>
+                            <div class="invalid-feedback">@userNameOrEmail</div>
+                        </div>
+                        <div class="form-group mt-1" style="position: relative;">
+                            <label>Password</label>
+                            <input type="password" id="password" class="form-control" name="password" value="@password" required>
+                            <div class="invalid-feedback"></div>
+                            <i id="togglePassword" class="fa-solid fa-eye eye" style="position: absolute; right: 3px; top: 70%; transform: translateY(-50%); cursor: pointer;"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                            <button type="submit" class="btn btn-dark w-100">
+                                <i class="fa-solid fa-lock"></i>
+                                Sign In
+                                </button>
+                        </div>
+                        <div class="form-group mt-1">
+                            <span class="text-danger">@errors</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var togglePassword = document.getElementById("togglePassword");
+            var passwordInput = document.getElementById("password");
+
+            togglePassword.addEventListener("click", function () {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    togglePassword.classList.remove("fa-eye");
+                    togglePassword.classList.add("fa-eye-slash");
+                } else {
+                    passwordInput.type = "password";
+                    togglePassword.classList.remove("fa-eye-slash");
+                    togglePassword.classList.add("fa-eye");
+                }
+            });
+        });
+    </script>
+}

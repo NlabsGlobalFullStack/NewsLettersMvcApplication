@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>048a40eb-bad5-4bc2-9ef6-3d281dbb7bd9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NewsLetter.Application\NewsLetter.Application.csproj" />
+    <ProjectReference Include="..\NewsLetter.Persistance\NewsLetter.Persistance.csproj" />
+  </ItemGroup>
+
+</Project>
