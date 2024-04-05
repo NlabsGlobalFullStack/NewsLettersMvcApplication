@@ -6,7 +6,7 @@ using NewsLetter.Domain.Entities;
 using NewsLetter.Domain.Repositories;
 using TS.Result;
 
-namespace NewsLetter.Application.Features.Blogs.Create;
+namespace NewsLetter.Application.Features.Blogs.Commands.Create;
 
 internal sealed class CreateBlogCommandHandler(IBlogRepository blogRepository, IMapper mapper, IUnitOfWork unitOfWork) : IRequestHandler<CreateBlogCommand, Result<string>>
 {
@@ -15,7 +15,7 @@ internal sealed class CreateBlogCommandHandler(IBlogRepository blogRepository, I
         var isBlogExists = await blogRepository.AnyAsync(b => b.Title == request.Title, cancellationToken);
         if (isBlogExists)
         {
-            return Result<string>.Failure( "This blog has been previously saved");
+            return Result<string>.Failure("This blog has been previously saved");
         }
 
         var blog = mapper.Map<Blog>(request);
@@ -26,5 +26,5 @@ internal sealed class CreateBlogCommandHandler(IBlogRepository blogRepository, I
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return "Blog create is successfull";
-    }   
+    }
 }

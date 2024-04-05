@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TS.Result;
 
-namespace NewsLetter.Application.Features.Blogs.Create;
+namespace NewsLetter.Application.Features.Blogs.Commands.Create;
 public sealed record CreateBlogCommand(
     string Title,
     string Content,

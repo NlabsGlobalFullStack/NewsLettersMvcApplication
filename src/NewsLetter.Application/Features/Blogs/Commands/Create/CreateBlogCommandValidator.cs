@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NewsLetter.Application.Features.Blogs.Create;
+namespace NewsLetter.Application.Features.Blogs.Commands.Create;
 
 public class CreateBlogCommandValidator : AbstractValidator<CreateBlogCommand>
 {

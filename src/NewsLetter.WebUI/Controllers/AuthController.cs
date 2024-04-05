@@ -17,7 +17,6 @@ public class AuthController(IMediator mediator) : Controller
     public async Task<IActionResult> Login(LoginCommand request, CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
-
         TempData["UserNameOrEmail"] = request.UserNameOrEmail;
         TempData["Password"] = request.Password;
 

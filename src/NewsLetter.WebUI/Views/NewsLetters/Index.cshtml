@@ -1,13 +1,58 @@
-﻿@{
+﻿@using EntityFrameworkCorePagination.Nuget.Pagination
+@using NewsLetter.Domain.Entities
+@{
     HttpContextAccessor httpContextAccessor = new();
     var isAuthenticated = httpContextAccessor.HttpContext!.User.Claims.Any();
     ViewData["Title"] = "Newletters";
+    @model PaginationResult<Blog>
+
 }
+
+<style>
+    .pagination .page-item.active .page-link {
+        background-color: white;
+        color: black;
+    }
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="addBlogModal" tabindex="-1" role="dialog" aria-labelledby="addBlogModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Newsletter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @* <form id="addBlogForm" method="post"> *@
+            <form id="addBlogForm" method="post" asp-controller="NewsLetters" asp-action="Create" autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" aria-label="Save">Save changes</button>
+                    <button type="button" class="btn btn-secondary" aria-label="Close" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+
 <div class="row">
     <div class="col-9">
         @if (isAuthenticated)
         {
-            <button class="btn btn-dark">
+            <button class="btn btn-outline-warning" onclick="openAddBlogModal()" data-toggle="modal" data-target="#addBlogModal">
                 <i class="fa-solid fa-plus"></i>
                 Add Newsletter
             </button>
@@ -17,16 +62,121 @@
         <input class="form-control" type="search" placeholder="Search...">
     </div>
 </div>
+
 <div class="card mt-2">
-    <div class="row">
-        <div class="col-2">            
-            <img src="https://raw.githubusercontent.com/turkmvc/turkmvc.github.io/master/images/image1.jpg" width="60%" object-fit: cover; />
+    @if (Model != null && Model.Datas != null)
+    {
+        @if (Model.Datas.Count == 0)
+        {
+            <div class="row justify-content-center">
+                <div class="col-6 text-center">
+                    <div style="font-size: 24px; color: white;">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h1 color: white; font-weight: bold">
+                        No blogs found.
+                    </h1>
+                </div>
+            </div>
+        }
+
+        else
+        {
+
+            <div class="row">
+                @foreach (var blog in Model.Datas)
+                {
+                    <div class="col-2">
+                        <img src="https://raw.githubusercontent.com/turkmvc/turkmvc.github.io/master/images/image1.jpg" width="60%" style="object-fit: cover;" />
+                    </div>
+                    <div class="col-10">
+                        <h2>@blog.Title</h2>
+                        <p>@blog.Content</p>
+                    </div>
+                }
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    @if (!Model.IsFirstPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-page="1">İlk Sayfa</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)">Önceki Sayfa</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <span class="page-link">Önceki Sayfa</span>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="javascript:void(0)" onclick="goToPage(@i, @Model.PageSize)">@i</a>
+                        </li>
+                    }
+
+                    @if (!Model.IsLastPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber + 1)">Sonraki Sayfa</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><span class="page-link">Sonraki Sayfa</span></li>
+                        <li class="page-item disabled"><span class="page-link">Son Sayfa</span></li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <div class="col-6 text-center">
+                <div style="font-size: 24px; color: white;">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <h1 color: white; font-weight: bold">
+                    No blogs found.
+                </h1>
+            </div>
         </div>
-        <div class="col-10">
-            <h2>What is the C#</h2>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt quisquam laudantium tempore. Cum, repellendus voluptates pariatur dignissimos fuga ad maxime aliquid a odit! Veniam enim corrupti fugit earum at illum?</p>
-        </div>
-    </div>
+    }
 </div>
 
+
+@section Scripts {
+    <script>
+        function openAddBlogModal() {
+            $('#addBlogModal').modal('show');
+        }
+
+        $(document).ready(function () {
+            $('#addBlogForm').submit(function (event) {
+                event.preventDefault();
+                var url = '/NewsLetters/Create';
+                var formData = $(this).serialize();
+                $.post(url, formData)
+                    .done(function (response) {
+                        $('#addBlogModal').modal('hide');
+                        location.reload();
+                    })
+                    .fail(function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    });
+            });
+        });
+
+        function goToPage(pageNumber, pageSize) {
+            window.location.href = '/NewsLetters?pageNumber=' + pageNumber + '&pageSize=' + pageSize;
+        }
+    </script>
+}
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using NewsLetter.Application.Features.Blogs.Create;
+using NewsLetter.Application.Features.Blogs.Commands.Create;
 using NewsLetter.Domain.Entities;
 
 namespace NewsLetter.Application.Profiles;
