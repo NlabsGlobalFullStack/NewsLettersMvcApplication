@@ -1,5 +1,4 @@
-﻿namespace NewsLetter.Domain.Entities;
-
+﻿namespace Newsletter.Consumer.Models;
 public sealed class Blog
 {
     public Blog()

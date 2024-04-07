@@ -15,38 +15,52 @@
     }
 </style>
 
-<!-- Modal -->
-<div class="modal fade" id="addBlogModal" tabindex="-1" role="dialog" aria-labelledby="addBlogModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Newsletter</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+@if (isAuthenticated)
+{
+    <!-- Modal -->
+    <div class="modal" id="addBlogModal" tabindex="-1" role="dialog" aria-labelledby="addBlogModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Newsletter</h5>
+                    <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="addBlogForm" method="post" asp-controller="NewsLetters" asp-action="Create" autocomplete="off">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="IsPublish" name="IsPublish" />
+                                <label class="form-check-label" for="IsPublish">Is Publish</label>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="content">Publish Date</label>
+                            <input type="date" name="publishDate" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Summary</label>
+                            <textarea class="form-control" id="summary" name="summary" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content</label>
+                            <textarea class="form-control" id="content" name="content" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-dark w-100" aria-label="Save">Save</button>
+                    </div>
+                </form>
             </div>
-            @* <form id="addBlogForm" method="post"> *@
-            <form id="addBlogForm" method="post" asp-controller="NewsLetters" asp-action="Create" autocomplete="off">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" name="title">
-                    </div>
-                    <div class="form-group">
-                        <label for="content">Content</label>
-                        <textarea class="form-control" id="content" name="content" rows="4"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" aria-label="Save">Save changes</button>
-                    <button type="button" class="btn btn-secondary" aria-label="Close" data-dismiss="modal">Close</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-<!-- Modal -->
-
+    <!-- Modal -->
+}
 
 <div class="row">
     <div class="col-9">
@@ -58,8 +72,9 @@
             </button>
         }
     </div>
-    <div class="col-3">
-        <input class="form-control" type="search" placeholder="Search...">
+    <div class="col-3 position-relative">
+        <input class="form-control" type="search" placeholder="Search..." style="padding-left:35px" onkeydown="search(event)">
+        <i class="fa-solid fa-magnifying-glass position-absolute" style="top:12px; left:25px"></i>
     </div>
 </div>
 
@@ -87,7 +102,7 @@
                 @foreach (var blog in Model.Datas)
                 {
                     <div class="col-2">
-                        <img src="https://raw.githubusercontent.com/turkmvc/turkmvc.github.io/master/images/image1.jpg" width="60%" style="object-fit: cover;" />
+                        <img src="/blog.jpeg" width="60%" style="object-fit: cover;" />
                     </div>
                     <div class="col-10">
                         <h2>@blog.Title</h2>
@@ -100,17 +115,17 @@
                     @if (!Model.IsFirstPage)
                     {
                         <li class="page-item">
-                            <a class="page-link" asp-action="Index" asp-route-page="1">İlk Sayfa</a>
+                            <a class="page-link" href="javascript:void(0)" onclick="goToFirstPage()">İlk Sayfa</a>
                         </li>
 
                         <li class="page-item">
-                            <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)">Önceki Sayfa</a>
+                            <a class="page-link" href="javascript:void(0)" onclick="goToPreviousPage(@Model.PageNumber)">Önceki Sayfa</a>
                         </li>
                     }
                     else
                     {
                         <li>
-                            <span class="page-link">Önceki Sayfa</span>
+                            <span class="page-link">İlk Sayfa</span>
                         </li>
                     }
 
@@ -124,13 +139,13 @@
                     @if (!Model.IsLastPage)
                     {
                         <li class="page-item">
-                            <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber + 1)">Sonraki Sayfa</a>
+                            <a class="page-link" href="javascript:void(0)" onclick="goToNextPage(@Model.PageNumber, @Model.TotalPages)">Sonraki Sayfa</a>
                         </li>
                     }
                     else
                     {
-                        <li class="page-item disabled"><span class="page-link">Sonraki Sayfa</span></li>
-                        <li class="page-item disabled"><span class="page-link">Son Sayfa</span></li>
+                        <a class="page-link" href="javascript:void(0)" onclick="goToNextPage(@Model.PageNumber, @Model.TotalPages)">Sonraki Sayfa</a>
+                        <a class="page-link" href="javascript:void(0)" onclick="goToLastPage(@Model.TotalPages)">Son Sayfa</a>
                     }
                 </ul>
             </nav>
@@ -151,8 +166,8 @@
     }
 </div>
 
-
 @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         function openAddBlogModal() {
             $('#addBlogModal').modal('show');
@@ -177,6 +192,34 @@
         function goToPage(pageNumber, pageSize) {
             window.location.href = '/NewsLetters?pageNumber=' + pageNumber + '&pageSize=' + pageSize;
         }
+
+        function goToFirstPage() {
+            goToPage(1, @Model.PageSize);
+        }
+
+        function goToLastPage(totalPages) {
+            goToPage(totalPages, @Model.PageSize);
+        }
+
+        function goToPreviousPage(currentPage) {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1, @Model.PageSize);
+            }
+        }
+
+        function goToNextPage(currentPage, totalPages) {
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1, @Model.PageSize);
+            }
+        }
+
+        function search(event) {
+            if (event.keyCode === 13) {
+                const value = event.target.value;
+                window.location.href = "/NewsLetters/Index?search=" + encodeURIComponent(value);
+            }
+        }
+
     </script>
 }
 

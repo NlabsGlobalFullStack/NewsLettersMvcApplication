@@ -9,7 +9,7 @@ internal sealed class GetAllBlogsQueryHandler(IBlogRepository blogRepository) : 
 {
     public async Task<PaginationResult<Blog>> Handle(GetAllBlogsQuery request, CancellationToken cancellationToken)
     {
-        var blogs = 
+        var blogs =
             await blogRepository.Where(p => p.Title.ToLower().Contains(request.Search.ToLower()))
             .OrderBy(p => p.Title)
             .ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);

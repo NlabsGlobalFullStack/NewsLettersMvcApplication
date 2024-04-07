@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NewsLetter.Domain.Entities;
 
 namespace NewsLetter.Application;
 public static class DependencyInjection
@@ -9,7 +10,8 @@ public static class DependencyInjection
 
         services.AddMediatR(configuration =>
         {
-            configuration.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+            configuration.RegisterServicesFromAssemblies(
+                typeof(DependencyInjection).Assembly, typeof(Blog).Assembly);
         });
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
