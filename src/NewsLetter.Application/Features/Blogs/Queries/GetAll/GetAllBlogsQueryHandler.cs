@@ -3,7 +3,7 @@ using MediatR;
 using NewsLetter.Domain.Entities;
 using NewsLetter.Domain.Repositories;
 
-namespace NewsLetter.Application.Features.Blogs.Queries;
+namespace NewsLetter.Application.Features.Blogs.Queries.GetAll;
 
 internal sealed class GetAllBlogsQueryHandler(IBlogRepository blogRepository) : IRequestHandler<GetAllBlogsQuery, PaginationResult<Blog>>
 {

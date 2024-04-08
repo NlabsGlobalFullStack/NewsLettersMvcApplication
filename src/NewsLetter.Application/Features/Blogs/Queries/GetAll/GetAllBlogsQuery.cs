@@ -2,9 +2,9 @@
 using MediatR;
 using NewsLetter.Domain.Entities;
 
-namespace NewsLetter.Application.Features.Blogs.Queries;
+namespace NewsLetter.Application.Features.Blogs.Queries.GetAll;
 public sealed record GetAllBlogsQuery(
     int PageNumber = 1,
-    int PageSize = 2,
+    int PageSize = 4,
     string Search = ""
 ) : IRequest<PaginationResult<Blog>>;

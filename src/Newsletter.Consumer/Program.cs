@@ -12,8 +12,6 @@ var services = new ServiceCollection();
 services.AddFluentEmail("turkmvc@gmail.com").AddSmtpSender("localhost", 2525);
 var serviceProvider = services.BuildServiceProvider();
 
-var context = new AppDbContext();
-
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();

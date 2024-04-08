@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using GenericRepository;
 using Microsoft.AspNetCore.Mvc;
+using NewsLetter.Application.Extensions;
 using NewsLetter.Domain.Entities;
 using NewsLetter.Domain.Repositories;
 
@@ -17,9 +18,12 @@ public class SeedDataController(ISubscribeRepository subscribeRepository, IBlogR
         for (int i = 0; i < 5; i++)
         {
             Random random = new();
+            var title = faker.Lorem.Letter(random.Next(5, 8));
+            var url = title.ConvertTitleToUrl();
             Blog blog = new()
             {
-                Title = faker.Lorem.Letter(random.Next(5, 8)),
+                Title = title,
+                Url = url,
                 Summary = faker.Lorem.Letter(random.Next(15, 55)),
                 Content = faker.Lorem.Lines(random.Next(3,7), "<br><br>"),
                 IsPublish = (i % 2 == 0),

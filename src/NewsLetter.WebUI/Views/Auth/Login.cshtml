@@ -9,24 +9,24 @@
         <div class="col-xl-4 col-lg-5 col-md-8 col-8">
             <div class="card">
                 <div class="card-header">
-                    <h3>Sign In</h3>
-                    <p>Please fill your information to login</p>
+                    <h3 class="fw-bold">Sign In</h3>
+                    <p class="fw-bold">Please fill your information to login</p>
                 </div>
                 <div class="card-body">
                     <form asp-controller="Auth" asp-action="Login" method="post" autocomplete="off">
                         <div class="form-group">
-                            <label>UserName or Email</label>
-                            <input type="text" name="UserNameOrEmail" class="form-control" value="@userNameOrEmail" required>
+                            <label class="fw-bold">UserName or Email</label>
+                            <input type="text" name="UserNameOrEmail" class="form-control is-invalid" value="@userNameOrEmail" required>
                             <div class="invalid-feedback">@userNameOrEmail</div>
                         </div>
                         <div class="form-group mt-1" style="position: relative;">
-                            <label>Password</label>
-                            <input type="password" id="password" class="form-control" name="password" value="@password" required>
-                            <div class="invalid-feedback"></div>
-                            <i id="togglePassword" class="fa-solid fa-eye eye" style="position: absolute; right: 3px; top: 70%; transform: translateY(-50%); cursor: pointer;"></i>
+                            <label class="fw-bold">Password</label>
+                            <input type="password" id="password" class="form-control is-invalid" name="password" value="@password" required>
+                            <div class="invalid-feedback">@password</div>
+                            <i id="togglePassword" class="fa-solid fa-eye eye" style="position: absolute; right: 35px; top: 70%; transform: translateY(-50%); cursor: pointer;"></i>
                         </div>
                         <div class="form-group mt-2">
-                            <button type="submit" class="btn btn-dark w-100">
+                            <button type="submit" class="btn btn-outline-warning w-100 fw-bold">
                                 <i class="fa-solid fa-lock"></i>
                                 Sign In
                                 </button>

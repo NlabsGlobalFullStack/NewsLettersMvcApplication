@@ -1,0 +1,57 @@
+﻿@using NewsLetter.Domain.Entities
+@model Blog
+@{
+    if (Model == null)
+    {
+        <p class="text-danger">Blog not found.</p>
+        return;
+    }
+    var blog = Model;
+    ViewData["Title"] = blog.Title;
+}
+
+<div class="mt-5">
+    <a href="javascript:history.go(-1)" class="btn btn-outline-warning fw-bold">
+        <i class="fa-solid fa-backward"></i>
+        Goto Back
+        </a>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>@blog.Title</h1>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <img src="/blog.jpeg" alt="@blog.Summary" class="img-fluid justify-content-center" style="width: 80%"/>
+        </div>
+        <div class="col-md-9 d-flex flex-column justify-content-between">
+            <p class="text-muted fw-bold h4">@blog.Summary</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <p>@Html.Raw(blog.Content)</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            @if (blog.IsPublish)
+            {
+                <p><span class="text-success fw-bold">Published</span></p>
+            }
+            else
+            {
+                <p><span class="text-danger fw-bold">Not Published</span></p>
+            }
+        </div>
+        <div class="col-md-6 text-end">
+            @if (blog.PublishDate != null)
+            {
+                <p>Publish Date: @blog.PublishDate</p>
+            }
+        </div>
+    </div>
+</div>
+
+

@@ -1,11 +1,10 @@
 ﻿@using EntityFrameworkCorePagination.Nuget.Pagination
 @using NewsLetter.Domain.Entities
+@model PaginationResult<Blog>
 @{
     HttpContextAccessor httpContextAccessor = new();
     var isAuthenticated = httpContextAccessor.HttpContext!.User.Claims.Any();
     ViewData["Title"] = "Newletters";
-    @model PaginationResult<Blog>
-
 }
 
 <style>
@@ -13,63 +12,28 @@
         background-color: white;
         color: black;
     }
+    .blogLink{
+        margin: 0 auto;
+        font-size: 10px;
+        color: #FF9800;
+        text-decoration: none;
+    }
+    .blogLink:hover{
+            text-decoration: none;
+            color: darkorange;
+            transform: scale(0.5);
+            cursor: pointer;
+    }
 </style>
-
-@if (isAuthenticated)
-{
-    <!-- Modal -->
-    <div class="modal" id="addBlogModal" tabindex="-1" role="dialog" aria-labelledby="addBlogModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Newsletter</h5>
-                    <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="addBlogForm" method="post" asp-controller="NewsLetters" asp-action="Create" autocomplete="off">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="IsPublish" name="IsPublish" />
-                                <label class="form-check-label" for="IsPublish">Is Publish</label>
-                            </div>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="content">Publish Date</label>
-                            <input type="date" name="publishDate" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" name="title">
-                        </div>
-                        <div class="form-group">
-                            <label for="content">Summary</label>
-                            <textarea class="form-control" id="summary" name="summary" rows="2"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="content">Content</label>
-                            <textarea class="form-control" id="content" name="content" rows="10"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-dark w-100" aria-label="Save">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-}
-
 <div class="row">
     <div class="col-9">
         @if (isAuthenticated)
         {
-            <button class="btn btn-outline-warning" onclick="openAddBlogModal()" data-toggle="modal" data-target="#addBlogModal">
+            @* <a asp-controller="Newsletters" asp-action="Create" class="btn btn-outline-warning"> *@
+            <a class="btn btn-outline-warning" href="NewsLetters/Create">
                 <i class="fa-solid fa-plus"></i>
                 Add Newsletter
-            </button>
+            </a>
         }
     </div>
     <div class="col-3 position-relative">
@@ -97,20 +61,35 @@
 
         else
         {
+            @foreach (var blog in Model.Datas)
+            {
+                <div class="card mt-1 mb-1">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="/blog.jpeg" alt="" style="width: 100%; height: 150px; object-fit: cover;">
+                        </div>
+                        <div class="col-10">
+                            <a class="blogLink" href="Newsletters/Detail?url=@blog.Url">
+                                <h2>@blog.Title</h2>
+                            </a>
+                            <p class="fw-bold">@blog.Summary</p>
+                            <p>
+                                @if (blog.IsPublish)
+                                {
+                                    <span class="text-success" style="font-size:small;">Published</span>
+                                    <span class="ms-2" style="font-size:small;">Publish Date: @blog.PublishDate</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger" style="font-size:small;">Not Published</span>
+                                }
 
-            <div class="row">
-                @foreach (var blog in Model.Datas)
-                {
-                    <div class="col-2">
-                        <img src="/blog.jpeg" width="60%" style="object-fit: cover;" />
+                            </p>
+                        </div>
                     </div>
-                    <div class="col-10">
-                        <h2>@blog.Title</h2>
-                        <p>@blog.Content</p>
-                    </div>
-                }
-            </div>
-            <nav aria-label="Page navigation example">
+                </div>
+            }
+            <nav  class="d-flex justify-content-center text-align-center mt-2 fw-bold">
                 <ul class="pagination">
                     @if (!Model.IsFirstPage)
                     {
@@ -124,7 +103,7 @@
                     }
                     else
                     {
-                        <li>
+                        <li class="page-item disabled">
                             <span class="page-link">İlk Sayfa</span>
                         </li>
                     }
@@ -141,11 +120,15 @@
                         <li class="page-item">
                             <a class="page-link" href="javascript:void(0)" onclick="goToNextPage(@Model.PageNumber, @Model.TotalPages)">Sonraki Sayfa</a>
                         </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0)" onclick="goToLastPage(@Model.TotalPages)">Son Sayfa</a>
+                        </li>
                     }
                     else
                     {
-                        <a class="page-link" href="javascript:void(0)" onclick="goToNextPage(@Model.PageNumber, @Model.TotalPages)">Sonraki Sayfa</a>
-                        <a class="page-link" href="javascript:void(0)" onclick="goToLastPage(@Model.TotalPages)">Son Sayfa</a>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="javascript:void(0)" onclick="goToLastPage(@Model.TotalPages)">Son Sayfa</a>
+                        </li>
                     }
                 </ul>
             </nav>
@@ -167,34 +150,13 @@
 </div>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        function openAddBlogModal() {
-            $('#addBlogModal').modal('show');
-        }
-
-        $(document).ready(function () {
-            $('#addBlogForm').submit(function (event) {
-                event.preventDefault();
-                var url = '/NewsLetters/Create';
-                var formData = $(this).serialize();
-                $.post(url, formData)
-                    .done(function (response) {
-                        $('#addBlogModal').modal('hide');
-                        location.reload();
-                    })
-                    .fail(function (xhr, status, error) {
-                        console.error(xhr.responseText);
-                    });
-            });
-        });
-
         function goToPage(pageNumber, pageSize) {
             window.location.href = '/NewsLetters?pageNumber=' + pageNumber + '&pageSize=' + pageSize;
         }
 
         function goToFirstPage() {
-            goToPage(1, @Model.PageSize);
+            goToPage(1, @Model!.PageSize);
         }
 
         function goToLastPage(totalPages) {
@@ -219,7 +181,6 @@
                 window.location.href = "/NewsLetters/Index?search=" + encodeURIComponent(value);
             }
         }
-
     </script>
 }
 
