@@ -3,6 +3,7 @@
     var errors = TempData["Error"];
     var userNameOrEmail = TempData["UserNameOrEmail"];
     var password = TempData["Password"];
+    // Layout = null;
 }
 <div class="row">
     <div class="d-flex justify-content-center align-items-center" style="height: 78vh;">
@@ -17,12 +18,11 @@
                         <div class="form-group">
                             <label class="fw-bold">UserName or Email</label>
                             <input type="text" name="UserNameOrEmail" class="form-control is-invalid" value="@userNameOrEmail" required>
-                            <div class="invalid-feedback">@userNameOrEmail</div>
                         </div>
                         <div class="form-group mt-1" style="position: relative;">
                             <label class="fw-bold">Password</label>
                             <input type="password" id="password" class="form-control is-invalid" name="password" value="@password" required>
-                            <div class="invalid-feedback">@password</div>
+
                             <i id="togglePassword" class="fa-solid fa-eye eye" style="position: absolute; right: 35px; top: 70%; transform: translateY(-50%); cursor: pointer;"></i>
                         </div>
                         <div class="form-group mt-2">
@@ -30,9 +30,6 @@
                                 <i class="fa-solid fa-lock"></i>
                                 Sign In
                                 </button>
-                        </div>
-                        <div class="form-group mt-1">
-                            <span class="text-danger">@errors</span>
                         </div>
                     </form>
                 </div>

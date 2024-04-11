@@ -13,11 +13,11 @@ public class SeedDataController(ISubscribeRepository subscribeRepository, IBlogR
     [HttpPost]
     public async Task<IActionResult> Seed(CancellationToken cancellationToken)
     {
-        Faker faker = new();
         List<Blog> blogs = new();
         for (int i = 0; i < 5; i++)
         {
             Random random = new();
+            Faker faker = new();
             var title = faker.Lorem.Letter(random.Next(5, 8));
             var url = title.ConvertTitleToUrl();
             Blog blog = new()
@@ -37,6 +37,7 @@ public class SeedDataController(ISubscribeRepository subscribeRepository, IBlogR
         List<Subscribe> subscribes = new();
         for (int i = 0; i < 1000; i++)
         {
+            Faker faker = new();
             Subscribe subscribe = new()
             {
                 Email = faker.Person.Email,

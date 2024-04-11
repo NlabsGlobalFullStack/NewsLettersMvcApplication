@@ -1,3 +1,4 @@
+using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,9 +21,19 @@ public class AuthController(IMediator mediator) : Controller
         TempData["UserNameOrEmail"] = request.UserNameOrEmail;
         TempData["Password"] = request.Password;
 
+        if (response.StatusCode == 200)
+        {
+            TempData["Message"] = response.Data;
+            TempData["status"] = "success";
+        }
+        else if(response.StatusCode == 500)
+        {
+            TempData["Message"] = response.ErrorMessages!.First();
+            TempData["status"] = "error";
+        }
+
         if (!response.IsSuccessful)
         {
-            TempData["Error"] = response.ErrorMessages!.First();
             return RedirectToAction("Login");
         }
 
@@ -43,6 +54,8 @@ public class AuthController(IMediator mediator) : Controller
     public async Task<IActionResult> LogOut()
     {
         await HttpContext.SignOutAsync();
+        TempData["Message"] = "Logout successful!";
+        TempData["status"] = "info";
         return RedirectToAction("Login");
     }
 }

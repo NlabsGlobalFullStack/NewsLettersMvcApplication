@@ -4,6 +4,7 @@ using MediatR;
 using NewsLetter.Domain.Repositories;
 using NewsLetter.Domain.Entities;
 using TS.Result;
+using NewsLetter.Infrastructure.Extensions;
 
 namespace NewsLetter.Application.Features.Subscribes.Commands.CreateSubscribe;
 
@@ -17,15 +18,33 @@ internal sealed class CreateSubscribeCommandHandler(ISubscribeRepository subscri
             return Result<string>.Failure("This email has been saved before.");
         }
 
+        if (string.IsNullOrEmpty(request.Email))
+        {
+            return Result<string>.Failure("Email address cannot be empty!");
+        }
+
+        if (request.Email.Length < 3)
+        {
+            return Result<string>.Failure("Email address must be at least 3 characters!");
+        }
+
+        var email = request.Email.IsValidEmail();
+
+        if (!email)
+        {
+            return Result<string>.Failure("Email address is not valid!");
+        }
+
         Subscribe? subscribe = new()
         {
             Email = request.Email,
             EmailConfirmed = true
         };
 
-        await subscribeRepository.AddAsync(subscribe,cancellationToken);
+        await subscribeRepository.AddAsync(subscribe, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<string>.Succeed("Congratulations, you have successfully signed up to our follow list!");
+
     }
 }

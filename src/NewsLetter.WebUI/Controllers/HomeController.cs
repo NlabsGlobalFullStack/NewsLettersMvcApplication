@@ -1,9 +1,11 @@
-using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NewsLetter.Application.Features.Subscribes.Commands.CreateSubscribe;
 
 namespace NewsLetter.WebUI.Controllers;
+//eger giriþ yapmadan hiç birþey yapýlmasýn istersek
+//If we want nothing to be done without logging in
+//[Authorize(AuthenticationSchemes ="Cookies")]
 public class HomeController(IMediator mediator) : Controller
 {
     public IActionResult Index()
@@ -18,10 +20,12 @@ public class HomeController(IMediator mediator) : Controller
         if (response.StatusCode == 200)
         {
             TempData["Message"] = response.Data;
+            TempData["status"] = "success";
         }
         else
         {
-            TempData["Message"] = response.Data;
+            TempData["Message"] = response.ErrorMessages!.First();
+            TempData["status"] = "error";
         }
         return RedirectToAction("Index");
     }

@@ -1,7 +1,17 @@
-﻿@{
+﻿@using NewsLetter.Domain.Entities
+@model Blog
+@{
     HttpContextAccessor httpContextAccessor = new();
     var isAuthenticated = httpContextAccessor.HttpContext!.User.Claims.Any();
-    ViewData["Title"] = "Create";
+
+    if (Model == null)
+    {
+        <p class="text-danger">Blog not found.</p>
+        return;
+    }
+    var blog = Model;
+
+    ViewData["Title"] = "Updaet Blog";
 
     if (!isAuthenticated)
     {
@@ -9,10 +19,14 @@
     }
 }
 <div class="row d-flex justify-content-center">
+    <a href="javascript:history.go(-1)" class="btn btn-outline-warning fw-bold">
+        <i class="fa-solid fa-backward"></i>
+        Goto Back
+    </a>
     <div class="col-8">
         <form asp-controller="Newsletters" asp-action="Create" method="post" autocomplete="off">
             <div class="form-group">
-                <label>Title</label>
+                <label>@blog.Title</label>
                 <input class="form-control" name="title" />
             </div>
 

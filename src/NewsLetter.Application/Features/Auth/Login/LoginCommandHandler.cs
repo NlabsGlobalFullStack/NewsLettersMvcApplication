@@ -23,6 +23,6 @@ internal sealed class LoginCommandHandler(UserManager<AppUser> userManager) : IR
             return Result<string>.Failure( "Password is wrong!");
         }
 
-        return "Login is successull";
+        return Result<string>.Succeed("Login is successull");
     }
 }

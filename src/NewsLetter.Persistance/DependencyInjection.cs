@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NewsLetter.Domain.Entities;
+using NewsLetter.Domain.Repositories;
 using NewsLetter.Persistance.Context;
-using Scrutor;
+using NewsLetter.Persistance.Repositories;
 
 namespace NewsLetter.Persistance;
 public static class DependencyInjection
@@ -22,13 +23,17 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<AppDbContext>());
 
-        services.Scan(selector => selector
-            .FromAssemblies(
-                typeof(DependencyInjection).Assembly)
-            .AddClasses(publicOnly: false)
-            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
-            .AsMatchingInterface()
-            .WithScopedLifetime());
+
+        services.AddScoped<IBlogRepository, BlogRepository>();
+        services.AddScoped<ISubscribeRepository, SubscribeRepository>();
+
+        //services.Scan(selector => selector
+        //    .FromAssemblies(
+        //        typeof(DependencyInjection).Assembly)
+        //    .AddClasses(publicOnly: false)
+        //    .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+        //    .AsMatchingInterface()
+        //    .WithScopedLifetime());
 
         return services;
     }

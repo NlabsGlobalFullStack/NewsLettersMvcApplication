@@ -12,24 +12,25 @@
         background-color: white;
         color: black;
     }
-    .blogLink{
+
+    .blogLink {
         margin: 0 auto;
         font-size: 10px;
         color: #FF9800;
         text-decoration: none;
     }
-    .blogLink:hover{
+
+        .blogLink:hover {
             text-decoration: none;
             color: darkorange;
             transform: scale(0.5);
             cursor: pointer;
-    }
+        }
 </style>
 <div class="row">
     <div class="col-9">
         @if (isAuthenticated)
         {
-            @* <a asp-controller="Newsletters" asp-action="Create" class="btn btn-outline-warning"> *@
             <a class="btn btn-outline-warning" href="NewsLetters/Create">
                 <i class="fa-solid fa-plus"></i>
                 Add Newsletter
@@ -74,22 +75,36 @@
                             </a>
                             <p class="fw-bold">@blog.Summary</p>
                             <p>
-                                @if (blog.IsPublish)
+                                @if (isAuthenticated)
                                 {
-                                    <span class="text-success" style="font-size:small;">Published</span>
-                                    <span class="ms-2" style="font-size:small;">Publish Date: @blog.PublishDate</span>
-                                }
-                                else
-                                {
-                                    <span class="text-danger" style="font-size:small;">Not Published</span>
-                                }
+                                    @if (blog.IsPublish)
+                                    {
 
+                                        <input class="form-control-checkbox" type="checkbox" onchange="changeStatus('@blog.Id')" checked />
+                                        <span class="ms-2 text-success fw-bold" style="font-size:small;">Publish Date: @blog.PublishDate</span>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-control-checkbox" type="checkbox" onchange="changeStatus('@blog.Id')" />
+                                        <span class="text-danger fw-bold" style="font-size:small;">Not Published</span>
+                                    }
+                                }else
+                                {
+                                    @if (blog.IsPublish)
+                                    {
+                                        <span class="ms-2 text-success fw-bold" style="font-size:small;">Publish Date: @blog.PublishDate</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger fw-bold" style="font-size:small;">Not Published</span>
+                                    }
+                                }
                             </p>
                         </div>
                     </div>
                 </div>
             }
-            <nav  class="d-flex justify-content-center text-align-center mt-2 fw-bold">
+            <nav class="d-flex justify-content-center text-align-center mt-2 fw-bold">
                 <ul class="pagination">
                     @if (!Model.IsFirstPage)
                     {
@@ -180,6 +195,13 @@
                 const value = event.target.value;
                 window.location.href = "/NewsLetters/Index?search=" + encodeURIComponent(value);
             }
+        }
+
+        function changeStatus(id) {
+            fetch("/Newsletters/ChangeStatus?id=" + id)
+                .then(() => {
+                    document.location.reload();
+                });
         }
     </script>
 }

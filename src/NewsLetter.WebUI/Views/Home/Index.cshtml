@@ -1,6 +1,9 @@
 ﻿@{
+    HttpContextAccessor httpContextAccessor = new();
+    var isAuthenticated = httpContextAccessor.HttpContext!.User.Claims.Any();
     ViewData["Title"] = "Home";
 }
+
 <div class="text-center">
     <img src="/logo2.jpeg" width="300" height="400" alt="Alternate Text" />
     <h1 class="display-4 fw-bold">Cuma KÖSE</h1>
@@ -8,8 +11,11 @@
     <p class="fw-bold">
         Lorem Ipsum, dizgi ve baskı endüstrisinde kullanılan mıgır metinlerdir. Lorem Ipsum, adı bilinmeyen bir matbaacının bir hurufat numune kitabı oluşturmak üzere bir yazı galerisini alarak karıştırdığı 1500'lerden beri endüstri standardı sahte metinler olarak kullanılmıştır. Beşyüz yıl boyunca varlığını sürdürmekle kalmamış, aynı zamanda pek değişmeden elektronik dizgiye de sıçramıştır. 1960'larda Lorem Ipsum pasajları da içeren Letraset yapraklarının yayınlanması ile ve yakın zamanda Aldus PageMaker gibi Lorem Ipsum sürümleri içeren masaüstü yayıncılık yazılımları ile popüler olmuştur.
     </p>
-    <form asp-controller="Home" asp-action="Subscribe" method="post" autocomplete="off" class="d-flex justify-content-center" style="gap:15px">
-        <input class="form-control bg-secondary" style="width:auto0%; color:black; font-weight:bold;" placeholder="your@email.com" name="email" />
-        <button type="submit" class="btn btn-outline-warning" style="font-weight: bold">Subscribe</button>
-    </form>
+    @if (!isAuthenticated)
+    {
+        <form asp-controller="Home" asp-action="Subscribe" method="post" autocomplete="off" class="d-flex justify-content-center" style="gap:15px">
+            <input class="form-control bg-secondary" style="width:auto0%; color:black; font-weight:bold;" placeholder="your@email.com" name="email" />
+            <button type="submit" class="btn btn-outline-warning" style="font-weight: bold">Subscribe</button>
+        </form>
+    }
 </div>

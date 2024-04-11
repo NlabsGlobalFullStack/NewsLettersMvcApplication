@@ -19,6 +19,11 @@ internal sealed class CreateBlogCommandHandler(IBlogRepository blogRepository, I
             return Result<string>.Failure("This blog has been previously saved");
         }
 
+        if (string.IsNullOrEmpty(request.Content) || string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Summary))
+        {
+            return Result<string>.Failure("Title | Summary | Content Cannot be empty");
+        }
+
         var blog = mapper.Map<Blog>(request);
         blog.Url = request.Title.ConvertTitleToUrl();
 
@@ -30,6 +35,6 @@ internal sealed class CreateBlogCommandHandler(IBlogRepository blogRepository, I
             await mediator.Publish(new BlogEvent(blog.Id));
         }
 
-        return "Blog create is successfull";
+        return Result<string>.Succeed("Blog create is successfull");
     }
 }

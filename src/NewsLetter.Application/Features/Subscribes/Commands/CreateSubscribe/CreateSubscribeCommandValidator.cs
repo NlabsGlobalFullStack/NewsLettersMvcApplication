@@ -8,5 +8,6 @@ public class CreateSubscribeCommandValidator : AbstractValidator<CreateSubscribe
     {
         RuleFor(s => s.Email).NotEmpty().NotNull().WithMessage("Email address cannot be empty!");
         RuleFor(s => s.Email).MinimumLength(3).WithMessage("Email address must be at least 3 characters!");
+        RuleFor(s => s.Email).EmailAddress().WithMessage("Email address is not valid!");
     }
 }
