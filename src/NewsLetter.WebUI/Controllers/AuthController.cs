@@ -1,4 +1,3 @@
-using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,8 +6,10 @@ using NewsLetter.Application.Features.Auth.Login;
 using System.Security.Claims;
 
 namespace NewsLetter.WebUI.Controllers;
-public class AuthController(IMediator mediator) : Controller
+public class AuthController : BaseController
 {
+
+    public AuthController(IMediator mediator) : base(mediator) { }
     public IActionResult Login()
     {
         return View();
@@ -17,7 +18,7 @@ public class AuthController(IMediator mediator) : Controller
     [HttpPost]
     public async Task<IActionResult> Login(LoginCommand request, CancellationToken cancellationToken)
     {
-        var response = await mediator.Send(request, cancellationToken);
+        var response = await _mediator.Send(request, cancellationToken);
         TempData["UserNameOrEmail"] = request.UserNameOrEmail;
         TempData["Password"] = request.Password;
 

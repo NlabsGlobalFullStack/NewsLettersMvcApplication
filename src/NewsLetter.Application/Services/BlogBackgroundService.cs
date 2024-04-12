@@ -25,7 +25,7 @@ public sealed class BlogBackgroundService : BackgroundService
         using var channel = connection.CreateModel();
 
         channel.QueueDeclare(
-            queue: "newsletter",
+            queue: "newsletters",
             exclusive: false,
             autoDelete: false,
             arguments: null
@@ -65,7 +65,7 @@ public sealed class BlogBackgroundService : BackgroundService
 
         };
 
-        channel.BasicConsume(queue: "newsletter", autoAck: true, consumer: consumer);
+        channel.BasicConsume(queue: "newsletters", autoAck: true, consumer: consumer);
 
         while (!stoppingToken.IsCancellationRequested)
         {

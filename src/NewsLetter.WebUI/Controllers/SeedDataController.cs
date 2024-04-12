@@ -13,6 +13,22 @@ public class SeedDataController(ISubscribeRepository subscribeRepository, IBlogR
     [HttpPost]
     public async Task<IActionResult> Seed(CancellationToken cancellationToken)
     {
+        var removeBlogs = blogRepository.GetAll().ToList();
+        var removedSubscribes = subscribeRepository.GetAll().ToList();
+
+        if (removeBlogs.Count <= 0)
+        {
+            return BadRequest("Silinecek blog bulunamadı.");
+        }
+
+        if (removedSubscribes.Count <= 0)
+        {
+            return BadRequest("Silinecek abonelik bulunamadı.");
+        }
+
+        subscribeRepository.DeleteRange(removedSubscribes);
+        blogRepository.DeleteRange(removeBlogs);
+
         List<Blog> blogs = new();
         for (int i = 0; i < 5; i++)
         {
@@ -31,11 +47,14 @@ public class SeedDataController(ISubscribeRepository subscribeRepository, IBlogR
             };
             blogs.Add(blog);
         }
-
         await blogRepository.AddRangeAsync(blogs, cancellationToken);
 
         List<Subscribe> subscribes = new();
-        for (int i = 0; i < 1000; i++)
+        foreach (var item in subscribes)
+        {
+            subscribes.Remove(item);
+        }
+        for (int i = 0; i < 20; i++)
         {
             Faker faker = new();
             Subscribe subscribe = new()
@@ -49,7 +68,6 @@ public class SeedDataController(ISubscribeRepository subscribeRepository, IBlogR
 
         await subscribeRepository.AddRangeAsync(subscribes, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return NoContent();
+        return Ok(new { status = "success", message = "All Datas Refreshed." });
     }
 }

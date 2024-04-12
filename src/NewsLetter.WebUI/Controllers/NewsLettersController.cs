@@ -1,17 +1,24 @@
-﻿using MediatR;
+﻿using Azure;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsLetter.Application.Features.Blogs.Commands.ChangeStatus;
 using NewsLetter.Application.Features.Blogs.Commands.Create;
+using NewsLetter.Application.Features.Blogs.Commands.Delete;
+using NewsLetter.Application.Features.Blogs.Commands.Update;
 using NewsLetter.Application.Features.Blogs.Queries.GetAll;
 using NewsLetter.Application.Features.Blogs.Queries.GetByBlog;
+using NewsLetter.Application.Features.Blogs.Queries.GetById;
+using NewsLetter.WebUI.Helpers;
 
 namespace NewsLetter.WebUI.Controllers;
-public class NewsLettersController(IMediator mediator) : Controller
+public class NewsLettersController : BaseController
 {
+    public NewsLettersController(IMediator mediator) : base(mediator) {}
+
     public async Task<IActionResult> Index(GetAllBlogsQuery request)
     {
-        var blogs = await mediator.Send(request);
+        var blogs = await _mediator.Send(request);
         return View(blogs);
     }
 
@@ -25,43 +32,33 @@ public class NewsLettersController(IMediator mediator) : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateBlogCommand request)
     {
-        var response = await mediator.Send(request);
+        var response = await _mediator.Send(request);
 
-        if (response.StatusCode == 200)
+        MyHelper.Handle(this, response, out result);
+        if (result == 200)
         {
-            TempData["Message"] = response.Data;
-            TempData["status"] = "success";
             return RedirectToAction("Index");
         }
         else
         {
-            TempData["Message"] = response.ErrorMessages!.First();
-            TempData["status"] = "error";
             return RedirectToAction("Create");
         }
     }
 
+    [Authorize(AuthenticationSchemes = "Cookies")]
     [HttpGet]
     public async Task<JsonResult> ChangeStatus(Guid id)
     {
-        var response = await mediator.Send(new ChangeStatusCommand(id));
-        
-        if (response.StatusCode == 200)
-        {
-            TempData["Message"] = response.Data;
-            TempData["status"] = "success";
-        }
-        else
-        {
-            TempData["Message"] = response.ErrorMessages!.First();
-            TempData["status"] = "error";
-        }
+        var response = await _mediator.Send(new ChangeStatusCommand(id));
+
+        MyHelper.Handle(this, response, out result);
+
         return Json(true);
     }
 
     public async Task<IActionResult> Detail(GetByBlogQuery request)
     {
-        var blog = await mediator.Send(request);
+        var blog = await _mediator.Send(request);
         if (blog is null)
         {
             return RedirectToAction("Index");
@@ -72,18 +69,46 @@ public class NewsLettersController(IMediator mediator) : Controller
         }
     }
 
+    [Authorize(AuthenticationSchemes = "Cookies")]
+    public async Task<IActionResult> Edit(GetByIdBlogCommand request)
+    {      
+        var blog = await _mediator.Send(request);
 
+        if (blog is not null)
+        {
+            return View("Update", blog);
+        }
+        else
+        {
+            return RedirectToAction("Index");
+        }
+    }
 
-    public async Task<IActionResult> Update(GetByBlogQuery request)
+    [Authorize(AuthenticationSchemes = "Cookies")]
+    [HttpPost]
+    public async Task<IActionResult> UpdatePost(UpdateBlogCommand request)
     {
-        var blog = await mediator.Send(request);
-        if (blog is null)
+        var response = await _mediator.Send(request);
+
+        MyHelper.Handle(this, response, out result);
+        if (result == 200)
         {
             return RedirectToAction("Index");
         }
         else
         {
-            return View(blog);
+            return RedirectToAction("Update");
         }
+    }
+
+    [Authorize(AuthenticationSchemes = "Cookies")]
+    [HttpGet]
+    public async Task<JsonResult> Delete(Guid id)
+    {
+        var response = await _mediator.Send(new DeleteCommand(id));
+
+        MyHelper.Handle(this, response, out result, "warning");
+
+        return Json(true);
     }
 }

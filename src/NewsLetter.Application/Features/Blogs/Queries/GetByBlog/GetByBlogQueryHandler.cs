@@ -10,6 +10,6 @@ internal sealed class GetByBlogQueryHandler(IBlogRepository blogRepository) : IR
     public async Task<Blog> Handle(GetByBlogQuery request, CancellationToken cancellationToken)
     {
         var blog = await blogRepository.Where(b => b.Url == request.Url).FirstOrDefaultAsync(cancellationToken);
-        return blog;
+        return blog!;
     }
 }

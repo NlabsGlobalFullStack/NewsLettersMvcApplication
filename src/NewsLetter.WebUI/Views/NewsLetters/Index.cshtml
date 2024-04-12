@@ -20,12 +20,20 @@
         text-decoration: none;
     }
 
-        .blogLink:hover {
-            text-decoration: none;
-            color: darkorange;
-            transform: scale(0.5);
-            cursor: pointer;
-        }
+    .blogLink:hover {
+        text-decoration: none;
+        color: darkorange;
+        transform: scale(0.5);
+        cursor: pointer;
+    }
+
+    .editbtn{
+        color: darkorange;
+    }
+
+    .editbtn:hover{
+        color: #aa2d;
+    }
 </style>
 <div class="row">
     <div class="col-9">
@@ -35,6 +43,10 @@
                 <i class="fa-solid fa-plus"></i>
                 Add Newsletter
             </a>
+            <button class="btn btn-outline-info" onclick="refreshSeedData()">
+                <i class="fa-solid fa-plus"></i>
+                Refresh SeedData
+            </button>
         }
     </div>
     <div class="col-3 position-relative">
@@ -70,9 +82,21 @@
                             <img src="/blog.jpeg" alt="" style="width: 100%; height: 150px; object-fit: cover;">
                         </div>
                         <div class="col-10">
-                            <a class="blogLink" href="Newsletters/Detail?url=@blog.Url">
-                                <h2>@blog.Title</h2>
-                            </a>
+                            <div class="row mt-2">
+                                <div class="col-10 float-start">
+                                    <a class="blogLink" href="Newsletters/Detail?url=@blog.Url">
+                                        <h2>@blog.Title</h2>
+                                    </a>
+                                </div>
+                                <div class="col-2 mt-2 float-end" style="margin-right: -20px;">
+                                    <button class="btn btn-outline-warning" onclick="goToEditPage('@blog.Id')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger" onclick="RemoveByBlog('@blog.Id')">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <p class="fw-bold">@blog.Summary</p>
                             <p>
                                 @if (isAuthenticated)
@@ -80,12 +104,12 @@
                                     @if (blog.IsPublish)
                                     {
 
-                                        <input class="form-control-checkbox" type="checkbox" onchange="changeStatus('@blog.Id')" checked />
+                                        <input class="form-control-checkbox" type="checkbox" onchange="changeStatus('@blog.Id', this.checked)" checked />
                                         <span class="ms-2 text-success fw-bold" style="font-size:small;">Publish Date: @blog.PublishDate</span>
                                     }
                                     else
                                     {
-                                        <input class="form-control-checkbox" type="checkbox" onchange="changeStatus('@blog.Id')" />
+                                        <input class="form-control-checkbox" type="checkbox" onchange="changeStatus('@blog.Id', this.checked)" />
                                         <span class="text-danger fw-bold" style="font-size:small;">Not Published</span>
                                     }
                                 }else
@@ -201,6 +225,51 @@
             fetch("/Newsletters/ChangeStatus?id=" + id)
                 .then(() => {
                     document.location.reload();
+                });
+        }
+
+        function RemoveByBlog(id) {
+            fetch("/Newsletters/Delete?id=" + id)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response;
+                })
+                .then(() => {
+                    document.location.reload();
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function goToEditPage(id) {
+            window.location.href = "/Newsletters/Edit?id=" + id;
+        }
+
+        function refreshSeedData() {
+            fetch("/api/SeedData/Seed", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        toastr.success(data.message, '', { positionClass: 'toast-bottom-right', timeOut: 1000 });
+                        setTimeout(() => {
+                            document.location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error(data.message, '', { positionClass: 'toast-bottom-right', timeOut: 1000 });
+                    }
+                })
+                .catch(error => {
+                    toastr.error('Seed Data güncellenirken bir hata oluştu.', '', { positionClass: 'toast-bottom-right', timeOut: 1000 });
+                    console.error('Hata:', error);
                 });
         }
     </script>

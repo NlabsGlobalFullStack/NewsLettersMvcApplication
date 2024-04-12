@@ -4,14 +4,14 @@
     HttpContextAccessor httpContextAccessor = new();
     var isAuthenticated = httpContextAccessor.HttpContext!.User.Claims.Any();
 
-    if (Model == null)
+    var blog = Model;
+    if (blog == null)
     {
         <p class="text-danger">Blog not found.</p>
         return;
     }
-    var blog = Model;
 
-    ViewData["Title"] = "Updaet Blog";
+    ViewData["Title"] = "Update Blog";
 
     if (!isAuthenticated)
     {
@@ -19,43 +19,52 @@
     }
 }
 <div class="row d-flex justify-content-center">
-    <a href="javascript:history.go(-1)" class="btn btn-outline-warning fw-bold">
-        <i class="fa-solid fa-backward"></i>
-        Goto Back
-    </a>
+    <div>
+        <a href="javascript:history.go(-1)" class="btn btn-outline-warning fw-bold">
+            <i class="fa-solid fa-backward"></i>
+            Goto Back
+        </a>
+    </div>
     <div class="col-8">
-        <form asp-controller="Newsletters" asp-action="Create" method="post" autocomplete="off">
+        <form asp-controller="Newsletters" asp-action="UpdatePost" method="post" autocomplete="off">
+            <input type="hidden" name="Id" value="@blog.Id" />
             <div class="form-group">
-                <label>@blog.Title</label>
-                <input class="form-control" name="title" />
+                <input class="form-control" name="title" value="@blog.Title" />
             </div>
 
             <div class="form-group mt-2">
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch!" id="isPublish" name="isPublish">
+                    <input class="form-check-input" type="checkbox" role="switch!" name="isPublish" @(blog.IsPublish ? "checked" : "") />
                     <label class="form-check-label" for="isPublish">Is Publish</label>
                 </div>
             </div>
 
             <div class="form-group mt-2">
                 <label>Publish Date</label>
-                <input type="date" name="publishDate" class="form-control" />
+                @if (blog.PublishDate!.HasValue)
+                {
+                    <input type="date-local" name="publishDate" class="form-control" value="@blog.PublishDate.Value.ToString("dd.MM.yyyy")" />
+                }
+                else
+                {
+                    <input type="date" name="publishDate" class="form-control" value="" />
+                }
             </div>
 
             <div class="form-group mt-2">
                 <label>Summary</label>
-                <textarea class="form-control" name="summary"></textarea>
+                <textarea class="form-control" name="summary">@blog.Summary</textarea>
             </div>
 
             <div class="form-group mt-2">
                 <label>Content</label>
-                <textarea class="form-control" name="content" rows="15"></textarea>
+                <textarea class="form-control" name="content" rows="15">@blog.Content</textarea>
             </div>
 
             <div class="form-group mt-2">
                 <button type="submit" class="btn btn-outline-warning w-100">
                     <i class="fa-solid fa-save me-1"></i>
-                    Save
+                    Update
                 </button>
             </div>
         </form>

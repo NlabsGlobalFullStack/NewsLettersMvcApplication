@@ -17,6 +17,13 @@
         background-color: #212529 !important;
         color: #dee2e6 !important;
     }
+
+    a {
+        text-decoration: none;
+    }
+    a:hover{
+        cursor: pointer;
+    }
 </style>
 <body data-bs-theme="dark">
     <header>
@@ -72,21 +79,26 @@
 
     <script>
         $(document).ready(function () {
+            function showToast(message, status) {
+                if (status === 'success') {
+                    toastr.success(message, '', { positionClass: 'toast-bottom-right', timeOut: 5000 });
+                } else if (status === 'info') {
+                    toastr.info(message, '', { positionClass: 'toast-bottom-right', timeOut: 5000 });
+                } else if (status === 'warning') {
+                    toastr.warning(message, '', { positionClass: 'toast-bottom-right', timeOut: 5000 });
+                } else if (status === 'error') {
+                    toastr.error(message, '', { positionClass: 'toast-bottom-right', timeOut: 5000 });
+                }
+            }
+
             var message = '@(TempData.ContainsKey("Message") ? TempData["Message"] : "")';
             var status = '@(TempData.ContainsKey("status") ? TempData["status"] : "")';
 
             if (message && status) {
-                if (status === 'success') {
-                    toastr.success(message, '', { positionClass: 'toast-bottom-right' });
-                } else if (status === 'info') {
-                    toastr.info(message, '', { positionClass: 'toast-bottom-right' });
-                } else if (status === 'warning') {
-                    toastr.warning(message, '', { positionClass: 'toast-bottom-right' });
-                } else if (status === 'error') {
-                    toastr.error(message, '', { positionClass: 'toast-bottom-right' });
-                }
+                showToast(message, status);
             }
         });
+
     </script>
 </body>
 </html>
