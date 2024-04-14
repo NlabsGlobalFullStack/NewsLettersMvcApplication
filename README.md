@@ -1,6 +1,13 @@
 # NewsLetter Application
 NewsLetters, MVC Clean Architecture kullanılarak geliştirilmiş bir haber bülteni uygulamasıdır. Bu uygulama, haber bültenlerine abone olma, kullanıcı hesapları oluşturma ve yönetme, kullanıcıların giriş yapması ve haber bültenlerini görüntüleme gibi temel işlevleri sunar.
 
+## Amazon Web Service ekledim ama deneme şansım olmadı
+ - SQS SNS işlemleri yapıldı
+ - işlem yapılan kısımlar
+ - AwsBackgroundService
+ - AwsAction
+ - SendQuequeSubscribes içerisinde Mail gönderim esnasında işlem yapmak
+
 ## Özellikler
 
 - **Kullanıcı Dostu Arayüz**: Kullanıcılar için kolay kullanılabilir arayüz sağlayarak, kullanıcı deneyimini ön planda tutar.
