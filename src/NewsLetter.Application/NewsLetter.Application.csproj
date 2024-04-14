@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.300.74" />
     <PackageReference Include="EntityFrameworkCore.Pagination" Version="8.0.0" />
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageReference Include="FluentValidation" Version="11.9.0" />

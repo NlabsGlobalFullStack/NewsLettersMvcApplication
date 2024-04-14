@@ -1,5 +1,4 @@
-﻿using Azure;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsLetter.Application.Features.Blogs.Commands.ChangeStatus;

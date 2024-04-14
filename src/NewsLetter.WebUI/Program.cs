@@ -8,7 +8,7 @@ using NewsLetter.Persistance;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistance(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 

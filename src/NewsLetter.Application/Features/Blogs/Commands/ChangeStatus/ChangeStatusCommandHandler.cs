@@ -1,6 +1,6 @@
 ﻿using GenericRepository;
 using MediatR;
-using NewsLetter.Domain.Events.Auth;
+using NewsLetter.Application.Events.Blog;
 using NewsLetter.Domain.Repositories;
 using TS.Result;
 
@@ -23,6 +23,7 @@ internal sealed class ChangeStatusCommandHandler(IBlogRepository blogRepository,
         if (blog.IsPublish)
         {
             await mediator.Publish(new BlogEvent(request.Id));
+
         }
 
         return Result<string>.Succeed("Change status is successful");

@@ -1,19 +1,25 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NewsLetter.Application.Services;
 using NewsLetter.Domain.Entities;
 
 namespace NewsLetter.Application;
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         //FLuentEmail
         services.AddFluentEmail("info@admin.com").AddSmtpSender("localhost", 2525);
         //FLuentEmail
 
-        //BackgroundService
+        //BlogBackgroundService
         services.AddHostedService<BlogBackgroundService>();
-        //BackgroundService
+        //BlogBackgroundService
+
+        //AwsBackgroundService
+        services.AddHostedService<AwsBackgroundService>();
+        services.AddSingleton<AwsAction>();
+        //AwsBackgroundService
 
         services.AddMediatR(configuration =>
         {

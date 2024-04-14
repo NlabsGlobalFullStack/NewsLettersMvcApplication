@@ -88,14 +88,17 @@
                                         <h2>@blog.Title</h2>
                                     </a>
                                 </div>
-                                <div class="col-2 mt-2 float-end" style="margin-right: -20px;">
-                                    <button class="btn btn-outline-warning" onclick="goToEditPage('@blog.Id')">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger" onclick="RemoveByBlog('@blog.Id')">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                </div>
+                                @if (isAuthenticated)
+                                {
+                                    <div class="col-2 mt-2 float-end" style="margin-right: -20px;">
+                                        <button class="btn btn-outline-warning" onclick="goToEditPage('@blog.Id')">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger" onclick="RemoveByBlog('@blog.Id')">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                }
                             </div>
                             <p class="fw-bold">@blog.Summary</p>
                             <p>
