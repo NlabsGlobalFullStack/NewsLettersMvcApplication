@@ -1,6 +1,6 @@
 ﻿using GenericRepository;
 using MediatR;
-using NewsLetter.Application.Events.Blog;
+using NewsLetter.Domain.Events.Blog;
 using NewsLetter.Domain.Repositories;
 using TS.Result;
 

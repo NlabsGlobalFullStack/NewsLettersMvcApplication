@@ -16,11 +16,6 @@ public static class DependencyInjection
         services.AddHostedService<BlogBackgroundService>();
         //BlogBackgroundService
 
-        //AwsBackgroundService
-        services.AddHostedService<AwsBackgroundService>();
-        services.AddSingleton<AwsAction>();
-        //AwsBackgroundService
-
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssemblies(

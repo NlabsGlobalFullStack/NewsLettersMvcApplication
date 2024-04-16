@@ -52,30 +52,38 @@ public class NewsLettersController : BaseController
 
         MyHelper.Handle(this, response, out result);
 
-        return Json(true);
+        if (result == 200)
+        {
+            return Json(true);
+        }
+        else
+        {
+            return Json(false);
+        }
     }
 
     public async Task<IActionResult> Detail(GetByBlogQuery request)
     {
-        var blog = await _mediator.Send(request);
-        if (blog is null)
+        var response = await _mediator.Send(request);
+
+        if (response.Data is null)
         {
             return RedirectToAction("Index");
         }
         else
         {
-            return View(blog);
+            return View(response);
         }
     }
 
     [Authorize(AuthenticationSchemes = "Cookies")]
     public async Task<IActionResult> Edit(GetByIdBlogCommand request)
     {      
-        var blog = await _mediator.Send(request);
+        var response = await _mediator.Send(request);
 
-        if (blog is not null)
+        if (response.Data is not null)
         {
-            return View("Update", blog);
+            return View("Update", response);
         }
         else
         {
@@ -108,6 +116,14 @@ public class NewsLettersController : BaseController
 
         MyHelper.Handle(this, response, out result, "warning");
 
-        return Json(true);
+        if (result == 200)
+        {
+            return Json(true);
+        }
+        else
+        {
+            return Json(false);
+        }
+
     }
 }

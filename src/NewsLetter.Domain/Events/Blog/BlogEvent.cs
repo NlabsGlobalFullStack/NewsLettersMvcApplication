@@ -1,4 +1,4 @@
 ﻿using MediatR;
 
-namespace NewsLetter.Application.Events.Blog;
+namespace NewsLetter.Domain.Events.Blog;
 public sealed record BlogEvent(Guid BlogId) : INotification;

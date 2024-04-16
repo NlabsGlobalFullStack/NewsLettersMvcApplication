@@ -3,7 +3,7 @@ using GenericRepository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NewsLetter.Application.Extensions;
-using NewsLetter.Application.Events.Blog;
+using NewsLetter.Domain.Events.Blog;
 using NewsLetter.Domain.Repositories;
 using TS.Result;
 

@@ -1,13 +1,14 @@
 ﻿@using NewsLetter.Domain.Entities
-@model Blog
+@using TS.Result
+@model Result<Blog>
 @{
-    if (Model == null)
+    var blog = Model;
+    if (blog == null)
     {
         <p class="text-danger">Blog not found.</p>
         return;
     }
-    var blog = Model;
-    ViewData["Title"] = blog.Title;
+    ViewData["Title"] = blog.Data!.Title;
 }
 
 <div class="mt-5">
@@ -17,26 +18,26 @@
         </a>
     <div class="row">
         <div class="col-12 text-center">
-            <h1>@blog.Title</h1>
+            <h1>@blog.Data!.Title</h1>
         </div>
     </div>
     <div class="row mt-4">
         <div class="col-md-3">
-            <img src="/blog.jpeg" alt="@blog.Summary" class="img-fluid justify-content-center" style="width: 80%"/>
+            <img src="/blog.jpeg" alt="@blog.Data!.Summary" class="img-fluid justify-content-center" style="width: 80%" />
         </div>
         <div class="col-md-9 d-flex flex-column justify-content-between">
-            <p class="text-muted fw-bold h4">@blog.Summary</p>
+            <p class="text-muted fw-bold h4">@blog.Data!.Summary</p>
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-12">
-            <p>@Html.Raw(blog.Content)</p>
+            <p>@Html.Raw(blog.Data!.Content)</p>
         </div>
     </div>
     <div class="row mt-4">
         <div class="col-md-6">
-            @if (blog.IsPublish)
+            @if (blog.Data!.IsPublish)
             {
                 <p><span class="text-success fw-bold">Published</span></p>
             }
@@ -46,9 +47,9 @@
             }
         </div>
         <div class="col-md-6 text-end">
-            @if (blog.PublishDate != null)
+            @if (blog.Data!.PublishDate != null)
             {
-                <p>Publish Date: @blog.PublishDate</p>
+                <p>Publish Date: @blog.Data!.PublishDate</p>
             }
         </div>
     </div>

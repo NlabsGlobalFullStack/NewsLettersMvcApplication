@@ -1,14 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using NewsLetter.Application.Services;
 using NewsLetter.Domain.Repositories;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 
-namespace NewsLetter.Application.Events.Blog;
+namespace NewsLetter.Domain.Events.Blog;
 
-public sealed class SendQuequeSubscribes(ISubscribeRepository subscribeRepository, AwsAction awsBackgroundService) : INotificationHandler<BlogEvent>
+public sealed class SendQuequeSubscribes(ISubscribeRepository subscribeRepository) : INotificationHandler<BlogEvent>
 {
     public async Task Handle(BlogEvent notification, CancellationToken cancellationToken)
     {
@@ -38,10 +37,6 @@ public sealed class SendQuequeSubscribes(ISubscribeRepository subscribeRepositor
             channel.BasicPublish(exchange: string.Empty, routingKey: "newsletters", basicProperties: null, body: body);
 
             Console.WriteLine($" [x] {email} sended queue");
-
-            //Aws İşlemi
-            await awsBackgroundService.ExecuteAsync(body.ToString(), cancellationToken);
-            //Aws İşlemi
         }
         await Task.CompletedTask;
     }

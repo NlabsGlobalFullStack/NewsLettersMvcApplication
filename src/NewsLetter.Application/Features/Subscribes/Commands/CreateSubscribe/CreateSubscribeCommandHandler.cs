@@ -1,14 +1,13 @@
-﻿using AutoMapper;
-using GenericRepository;
+﻿using GenericRepository;
 using MediatR;
-using NewsLetter.Domain.Repositories;
 using NewsLetter.Domain.Entities;
-using TS.Result;
+using NewsLetter.Domain.Repositories;
 using NewsLetter.Infrastructure.Extensions;
+using TS.Result;
 
 namespace NewsLetter.Application.Features.Subscribes.Commands.CreateSubscribe;
 
-internal sealed class CreateSubscribeCommandHandler(ISubscribeRepository subscribeRepository, IMapper mapper, IUnitOfWork unitOfWork) : IRequestHandler<CreateSubscribeCommand, Result<string>>
+internal sealed class CreateSubscribeCommandHandler(ISubscribeRepository subscribeRepository, IUnitOfWork unitOfWork) : IRequestHandler<CreateSubscribeCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CreateSubscribeCommand request, CancellationToken cancellationToken)
     {

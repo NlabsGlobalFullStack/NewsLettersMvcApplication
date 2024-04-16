@@ -6,7 +6,7 @@ namespace NewsLetter.WebUI.Helpers;
 
 public static class MyHelper
 {
-    public static void Handle(Controller controller, Result<string> response, out int result, string? status = null)
+    public static void Handle<T>(Controller controller, Result<T> response, out int result, string? status = null)
     {
         result = response.StatusCode;
         if (result == 200)

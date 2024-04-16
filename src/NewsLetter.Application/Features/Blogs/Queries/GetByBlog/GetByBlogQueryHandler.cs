@@ -1,15 +1,19 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NewsLetter.Domain.Entities;
 using NewsLetter.Domain.Repositories;
+using TS.Result;
 
 namespace NewsLetter.Application.Features.Blogs.Queries.GetByBlog;
 
-internal sealed class GetByBlogQueryHandler(IBlogRepository blogRepository) : IRequestHandler<GetByBlogQuery, Blog>
+internal sealed class GetByBlogQueryHandler(IBlogRepository blogRepository) : IRequestHandler<GetByBlogQuery, Result<Blog>>
 {
-    public async Task<Blog> Handle(GetByBlogQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Blog>> Handle(GetByBlogQuery request, CancellationToken cancellationToken)
     {
-        var blog = await blogRepository.Where(b => b.Url == request.Url).FirstOrDefaultAsync(cancellationToken);
-        return blog!;
+        var blog = await blogRepository.GetByExpressionAsync(b => b.Url == request.Url, cancellationToken);
+        if (blog is null)
+        {
+            return Result<Blog>.Failure("Blog not found");
+        }
+        return Result<Blog>.Succeed(blog);
     }
 }
