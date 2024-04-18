@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using NewsLetter.Application;
 using NewsLetter.Application.Utilities;
-using NewsLetter.Domain.Entities;
 using NewsLetter.Persistance;
+using NewsLetter.WebUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,21 +49,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-using (var scoped = app.Services.CreateScope())
-{
-    var userManager = scoped.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-    if (!userManager.Users.Any())
-    {
-        //default user information
-        AppUser? user = new()
-        {
-            Email = "admin@admin.com",
-            UserName = "admin"
-        };
-
-        userManager.CreateAsync(user, "String1*").Wait();
-    }
-}
+DefaultUser.CreateDefaultUserAsync(app).Wait();
 
 app.MapControllerRoute(
     name: "default",
